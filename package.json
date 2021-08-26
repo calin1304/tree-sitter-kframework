@@ -4,7 +4,8 @@
   "description": "",
   "main": "bindings/node",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tree-sitter generate",
+    "test": "tree-sitter test"
   },
   "keywords": [],
   "author": "",
@@ -16,10 +17,12 @@
     "nan": "^2.15.0"
   },
   "tree-sitter": [
-      {
-          "scope": "kframework",
-          "file-types": ["k"],
-          "highlights": "queries/kframework/highlights.scm"
-      }
+    {
+      "scope": "kframework",
+      "file-types": [
+        "k"
+      ],
+      "highlights": "queries/kframework/highlights.scm"
+    }
   ]
 }
