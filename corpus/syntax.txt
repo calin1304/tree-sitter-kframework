@@ -1,0 +1,23 @@
+===
+Syntax
+===
+
+module EXERCISE_1-SYNTAX
+    imports DOMAIN
+    imports INT-SYNTAX
+
+    syntax Bool ::= "true"
+endmodule
+
+---
+
+(source_file
+    (module
+        (module_name)
+        (imports (module_name))
+        (imports (module_name))
+        (sentence
+            (syntax (sort_name))
+        )
+    )
+)

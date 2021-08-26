@@ -1,0 +1,11 @@
+===
+Module
+===
+
+module EXERCISE_1-SYNTAX
+
+endmodule
+
+---
+
+(source_file (module (module_name)))

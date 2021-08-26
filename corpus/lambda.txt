@@ -1,0 +1,54 @@
+===
+Lambda
+===
+
+require "substitution.md"
+
+module LAMBDA-SYNTAX
+    imports DOMAINS-SYNTAX
+    imports KVAR-SYNTAX
+
+    syntax Val ::=
+        KVar
+      | "lambda" KVar "." Expr [binder]
+
+    syntax Expr ::=
+        Val
+      | Expr Expr    [strict, left]
+      | "(" Expr ")" [bracket]
+
+    syntax Val ::= Int | Bool
+    syntax Expr ::=
+        "-" Int
+      > Expr "*"  Expr [strict, left]
+      | Expr "/"  Expr [strict]
+      > Expr "+"  Expr [strict, left]
+      > Expr "<=" Expr [strict]
+
+    syntax Expr ::= "if" Expr "then" Expr "else" Expr [strict(1)]
+
+    syntax Expr ::= "let" KVar "=" Expr "in" Expr
+endmodule
+
+---
+
+(source-file
+    (require (require_file))
+    (module
+        (module_name)
+        (imports (module_name))
+        (imports (module_name))
+        (sentence
+            (syntax
+                (sort_name)
+                (syntax_def
+                    (syntax_def_entry (sort_name))
+                    (syntax_def_entry
+                        (syntax_def_expr)
+                        (attribute_list)
+                    )
+                )
+            )
+        )
+    )
+)

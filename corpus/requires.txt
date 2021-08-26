@@ -1,0 +1,9 @@
+===
+Requires file
+===
+
+requires "file.txt"
+
+---
+
+(source_file (requires (require_file)))

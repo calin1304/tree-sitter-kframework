@@ -1,0 +1,18 @@
+===
+Imports
+===
+
+module EXERCISE_1-SYNTAX
+    imports DOMAIN
+    imports INT-SYNTAX
+endmodule
+
+---
+
+(source_file
+    (module
+        (module_name)
+        (imports (module_name))
+        (imports (module_name))
+    )
+)
