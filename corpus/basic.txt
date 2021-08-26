@@ -1,0 +1,108 @@
+===
+Comment
+===
+
+// This is a comment
+
+---
+
+(source_expression (comment))
+
+===
+Requires file
+===
+
+requires "file.txt"
+
+---
+
+(source_expression (requires (require_file)))
+
+===
+Module
+===
+
+module EXERCISE_1-SYNTAX
+
+endmodule
+
+---
+
+(source_expression (module (module_name)))
+
+===
+Imports
+===
+
+module EXERCISE_1-SYNTAX
+    imports DOMAIN
+    imports INT-SYNTAX
+endmodule
+
+---
+
+(source_expression
+    (module
+        (module_name)
+        (imports (module_name))
+        (imports (module_name))
+    )
+)
+
+===
+Syntax
+===
+
+module EXERCISE_1-SYNTAX
+    syntax Bool ::=
+        "true"
+      | "false"
+      | not(Bool)
+      | Bool "&&" Bool
+endmodule
+
+---
+
+(source_expression
+    (module
+        (module_name)
+        (syntax
+            (sort_name)
+            (syntax_def
+                (syntax_def_entry)
+                (syntax_def_entry)
+                (syntax_def_entry)
+                (syntax_def_entry)
+            )
+        )
+    )
+)
+
+===
+Rule
+===
+
+module EXERCISE_1-SYNTAX
+    imports DOMAIN
+    imports INT-SYNTAX
+
+    syntax Bool ::=
+        "true"
+      | "false"
+      | not(Bool) [functional]
+
+    rule not(true) => false
+endmodule
+
+---
+
+(source_expression
+    (module
+        (module_name)
+        (imports (module_name))
+        (imports (module_name))
+        (syntax (builtin_sort))
+        (rule
+            (_rule_lhs) (_rule_rhs))
+    )
+)
