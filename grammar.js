@@ -14,9 +14,7 @@ module.exports = grammar({
             repeat($.module)
         ),
 
-        path: $ => seq('"', '"'),
-
-        require: $ => seq('require', $.path),
+        require: $ => seq('require', $.string),
         // Module definition {{{
         module: $ => seq(
             'module',

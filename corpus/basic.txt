@@ -12,11 +12,11 @@ Comment
 Requires file
 ===
 
-requires "file.txt"
+require "file.txt"
 
 ---
 
-(source_expression (requires (require_file)))
+(source_expression (require (string)))
 
 ===
 Module
@@ -104,5 +104,35 @@ endmodule
         (syntax (builtin_sort))
         (rule
             (_rule_lhs) (_rule_rhs))
+    )
+)
+
+===
+Configuration
+===
+
+module MODULE_NAME-1-SYNTAX
+    configuration
+        <T>
+            <k> $PGM:Pgm </k>
+            <state> 0 </state>
+            <store> .Map </store>
+        </T>
+endmodule
+
+---
+
+(source_expression
+    (module
+        (module_name)
+        (configuration
+            (cell
+                (cell_open)
+                (cell (cell_open) (cell_close))
+                (cell (cell_open) (cell_close))
+                (cell (cell_open) (cell_close))
+                (cell_close)
+            )
+        )
     )
 )
