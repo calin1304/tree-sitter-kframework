@@ -1,7 +1,4 @@
 [
-    (comment)
-    (configuration)
     (module)
-    (rule)
-    (syntax)
+    (cell_content)
 ] @fold
