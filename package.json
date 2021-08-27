@@ -19,9 +19,7 @@
   "tree-sitter": [
     {
       "scope": "kframework",
-      "file-types": [
-        "k"
-      ],
+      "file-types": ["k", "md"],
       "highlights": "queries/kframework/highlights.scm"
     }
   ]
