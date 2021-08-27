@@ -1,4 +1,4 @@
 [
     (module)
-    (cell_content)
+    (cell)
 ] @fold

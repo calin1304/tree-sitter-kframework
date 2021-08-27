@@ -15,8 +15,8 @@
 
 (sort) @type
 
-(attr_list) @constructor
+(attr_list) @attribute
 
 (constr_name) @constructor
 
-[(cell_open) (cell_close)]@tag
+[(cell_open) (cell_close)] @tag
