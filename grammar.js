@@ -40,11 +40,14 @@ module.exports = grammar({
         claim: $ => "claim",
         context: $ => "context",
         // Configuration {{{
-        configuration: $ => seq("configuration", $._configuration),
-        _configuration: $ => seq($.cell_start, $.cell_content, $.cell_end),
-        cell_start: $ => seq('<', /[a-zA-Z_](\w|-)*/, '>'),
-        cell_content: $ => /.*/,
-        cell_end: $ => seq('<', /[a-zA-Z_](\w|-)*/, '>'),
+        configuration: $ => seq("configuration", $.cell),
+        cell: $ => seq($.cell_open, $._cell_content, $.cell_close),
+        cell_open: $ => seq('<', /[a-zA-Z_](\w|-)*/, '>'),
+        _cell_content: $ => choice(
+            /([$:.]|\w)+/,
+            repeat1($.cell),
+        ),
+        cell_close: $ => seq('</', /[a-zA-Z_](\w|-)*/, '>'),
         // }}}
         // Syntax definition {{{
         syntax: $ => seq('syntax', $.sort, "::=", $.syntax_def),
