@@ -57,8 +57,8 @@ module EXERCISE_1-SYNTAX
     syntax Bool ::=
         "true"
       | "false"
-      | not(Bool)
-      | Bool "&&" Bool
+      | not(Bool) [function, strict(1)]
+      | Bool "&&" Bool [function]
 endmodule
 
 ---
@@ -67,12 +67,12 @@ endmodule
     (module
         (module_name)
         (syntax
-            (sort_name)
+            (sort)
             (syntax_def
-                (syntax_def_entry)
-                (syntax_def_entry)
-                (syntax_def_entry)
-                (syntax_def_entry)
+                (syntax_def_entry (string))
+                (syntax_def_entry (string))
+                (syntax_def_entry (constr_name) (attr_list))
+                (syntax_def_entry (sort) (string) (sort) (attr_list))
             )
         )
     )

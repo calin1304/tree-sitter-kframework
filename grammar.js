@@ -5,8 +5,6 @@ module.exports = grammar({
         $.comment
     ],
     inline: $ => [
-        $.upper_id,
-        $.lower_id,
         $.attribute_name,
         $.builtin_sort
     ],
@@ -16,9 +14,9 @@ module.exports = grammar({
             repeat($.module)
         ),
 
-        require: $ => seq('require', $.require_file),
-        require_file: $ => /"[A-Za-z0-9./]+"/,
+        path: $ => seq('"', '"'),
 
+        require: $ => seq('require', $.path),
         // Module definition {{{
         module: $ => seq(
             'module',
@@ -28,12 +26,10 @@ module.exports = grammar({
             'endmodule'
         ),
         // }}}
-
         // Imports {{{
         imports: $ => seq('imports', $.module_name),
         module_name: $ => /#?(\w|-)+/,
         /// }}}
-
         _sentence: $ => choice(
             $.claim,
             $.context,
@@ -41,10 +37,8 @@ module.exports = grammar({
             $.rule,
             $.syntax,
         ),
-
         claim: $ => "claim",
         context: $ => "context",
-
         // Configuration {{{
         configuration: $ => seq("configuration", $._configuration),
         _configuration: $ => seq($.cell_start, $.cell_content, $.cell_end),
@@ -52,57 +46,35 @@ module.exports = grammar({
         cell_content: $ => /.*/,
         cell_end: $ => seq('<', /[a-zA-Z_](\w|-)*/, '>'),
         // }}}
-
         // Syntax definition {{{
-        syntax: $ => seq('syntax', $.sort_name, "::=", $.syntax_def),
+        syntax: $ => seq('syntax', $.sort, "::=", $.syntax_def),
+        syntax_def: $ => sep1($.syntax_def_entry, /[|>]/),
+        syntax_def_entry: $ => seq(choice($._constr, $._app), optional($.attr_list)),
 
-        syntax_def: $ => sep1($.syntax_def_entry, '|'),
-        syntax_def_entry: $ => /[a-zA-Z()"&\s]+\\n/,
+        _constr: $ => seq(alias($._lower_id, $.constr_name), $._constr_args),
+        _constr_args: $ => seq('(', sep1(alias($.sort, 'function argument'), ','), ')'),
+        _app: $ => repeat1(choice($.string, $.sort)),
 
-        // syntax_def: $ => seq(
-        //     $.syntax_def_token,
-        //     repeat(seq('|', $.syntax_def_token))
-        // ),
-        // syntax_def_token: $ =>  /"[a-z]+"/,
-
-        // syntax_def: $ => seq(
-        //     $.syntax_def_entry,
-        //     repeat(seq(choice('|', '>'), $.syntax_def_entry))
-        // ),
-        // syntax_def_entry: $ => seq(
-        //     $.syntax_def_tokens,
-        //     $.attribute_list,
-        // ),
-        // syntax_def_tokens: $ => choice(
-        //     repeat1(choice($.sort_name, $.quoted))
-
-        // ),
-        // syntax_token: $ => /"#?\w+"/,
-        // syntax_constructor: $ => /.+/, // seq($.identifier, '(', $._constructor_args, ')'),
-        // // _constructor_args: $ => seq($.sort_name, repeat(seq(',', $.sort_name))),
-
-        // attribute_list: $ => seq(
-        //     '[',
-        //     seq($.attribute_name, repeat(seq(',', $.attribute_name))),
-        //     ']'
-        // ),
-        // attribute_name: $ => /[\w()]+/,
+        attr_list: $ => seq('[', sep1(choice($._attr, $._attr_constr), ','), ']'),
+        _attr: $ => /[a-z]+/,
+        _attr_constr: $ => seq($._attr, $._attr_constr_args),
+        _attr_constr_args: $ => seq('(', sep1($._attr_constr_arg, ','), ')'),
+        _attr_constr_arg: $ => /\w+/,
         // }}}
-
         // Rule definition {{{
         rule: $ => seq('rule', $._rule_lhs, '=>', $._rule_rhs),
 
         _rule_lhs: $ => /.*/,
         _rule_rhs: $ => /.+/,
         // }}}
-
         // Misc {{{
-        identifier: $ => /\a\w*/,
-        upper_id: $ => /#?[A-Z][a-zA-Z0-9]*/,
-        lower_id: $ => /#?[A-Z][a-zA-Z0-9]*/,
-        sort_name: $ => choice($.builtin_sort, $.upper_id),
+        _upper_id: $ => /#?[A-Z][a-zA-Z0-9]*/,
+        _lower_id: $ => /#?[a-z][a-zA-Z0-9]*/,
+        sort: $ => choice($.builtin_sort, $._upper_id),
         builtin_sort: $ => choice("Bool", "String", "Int"),
         comment: $ => token(seq('//', /.*/)),
+        string: $ => seq('"', optional($._str_content), '"'),
+        _str_content: $ => /[^"]+/,
         // }}}
     }
 })
