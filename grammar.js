@@ -6,10 +6,13 @@ module.exports = grammar({
     ],
     inline: $ => [
     ],
+    conflicts: $ => [
+        [ $.cell_close, $._cell_rewrite ]
+    ],
     rules: {
         source_expression: $ => seq(
-            repeat($.require),
-            repeat($.module)
+            repeat($.requires_file),
+            repeat1($.module)
         ),
 
         // Misc {{{
@@ -22,7 +25,7 @@ module.exports = grammar({
         _str_content: $ => /[^"]+/,
         // }}}
 
-        require: $ => seq('require', $.string),
+        requires_file: $ => seq('requires', $.string),
         // Module definition {{{
         module: $ => seq(
             'module',
@@ -32,10 +35,12 @@ module.exports = grammar({
             'endmodule'
         ),
         // }}}
+
         // Imports {{{
         imports: $ => seq('imports', $.module_name),
         module_name: $ => /#?(\w|-)+/,
         /// }}}
+
         // Sentence {{{
         _sentence: $ => choice(
             $.claim,
@@ -47,16 +52,18 @@ module.exports = grammar({
         // }}}
         claim: $ => "claim",
         context: $ => "context",
+
         // Configuration {{{
         configuration: $ => seq("configuration", $.cell),
         cell: $ => seq($.cell_open, $._cell_content, $.cell_close),
-        cell_open: $ => tag_open(/[a-zA-Z_](\w|-)*/),
+        cell_open: $ => token(tag_open(/[a-zA-Z_](\w|-)*/)),
         _cell_content: $ => choice(
             /([$:.]|\w)+/,
             repeat1($.cell),
         ),
-        cell_close: $ => tag_close(/[a-zA-Z_](\w|-)*/),
+        cell_close: $ => token(tag_close(/[a-zA-Z_](\w|-)*/)),
         // }}}
+
         // Syntax definition {{{
         syntax: $ => seq('syntax', $.sort, "::=", $.syntax_def),
         syntax_def: $ => sep1($.syntax_def_entry, /[|>]/),
@@ -71,14 +78,19 @@ module.exports = grammar({
         _attr_constr: $ => call($._attr, $._attr_constr_arg),
         _attr_constr_arg: $ => /\w+/,
         // }}}
-        // Rule definition {{{
-        rule: $ => seq('rule', $.rule_lhs, '=>', $.rule_rhs),
-        rule_lhs: $ => /[^=>]*/,
-        rule_rhs: $ => /.+/,
-        // }}}
+
+        rule: $ => seq('rule', $.rule_body, optional($.rule_requires)),
+        rule_body: $ => choice(
+            seq(repeat1($._cell_rule), token(seq('requires', /.+/)))
+        ),
+
+        _cell_rule: $ => seq($.cell_open, $._cell_rewrite, $.cell_close),
+        _cell_rewrite: $ => prec(-1, token(seq(/.+/, '=>', /.+/))),
+        rule_requires: $ => token(seq('requires', /.+/)),
     }
 })
 
+// Helper functions {{{
 function sep1(rule, separator) {
     return seq(rule, repeat(seq(separator, rule)));
 }
@@ -101,3 +113,4 @@ function brackets(rule) {
 function call(func, arg) {
     return seq(func, parans(sep1(arg, ',')));
 }
+// }}}

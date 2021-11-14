@@ -3,7 +3,7 @@
     "endmodule"
     "imports"
     "module"
-    "require"
+    "requires"
     "rule"
     "syntax"
 ] @keyword

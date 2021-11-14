@@ -24,6 +24,12 @@ module LAMBDA-SYNTAX
     syntax Expr ::= "if" Expr "then" Expr "else" Expr [strict(1)]
 
     syntax Expr ::= "let" KVar "=" Expr "in" Expr
+
+    configuration
+        <T>
+            <k> $PGM:Val </k>
+            <state> .Map </state>
+        </T>
 endmodule
 
 module LAMBDA

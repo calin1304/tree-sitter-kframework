@@ -12,11 +12,11 @@ Comment
 Requires file
 ===
 
-require "file.txt"
+requires "file.txt"
 
 ---
 
-(source_expression (require (string)))
+(source_expression (requires_file (string)))
 
 ===
 Module
@@ -83,7 +83,7 @@ Rule
 ===
 
 module EXERCISE_1-SYNTAX
-    rule not(true) => false
+    rule <k> not(true) => false </k>
 endmodule
 
 ---
@@ -91,7 +91,7 @@ endmodule
 (source_expression
     (module
         (module_name)
-        (rule (rule_lhs) (rule_rhs))
+        (rule (rule_body) (rule_requires))
     )
 )
 
